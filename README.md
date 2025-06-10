@@ -100,7 +100,7 @@ Ingrese el kilometraje actual de su vehículo (km):
 
 
 ```
-Si usted ingresa el valor '8888' como valor en el kilometraje que le piden le tiene que salirle lo siguiente
+Si usted ingresa '8888' como valor en el kilometraje que le piden le tiene que salirle lo siguiente
 ```
 Ingrese el kilometraje actual de su vehículo (km): 8888
 
