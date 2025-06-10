@@ -13,34 +13,35 @@ copiar y pegar el siguiente código Pydroid
 
 ```python
 mantenimiento_moto = {
-    # Cambios de Fluidos y Filtros
+
+# Cambios de Fluidos y Filtros
     "cambio_aceite_motor_km": [7, 3000],
     "cambio_aceite_sintetico_km": [7, 6000],
     "cambio_filtro_aceite_km": [7, 7000],
     "cambio_filtro_aire_km": [7, 8500],
     "cambio_liquido_frenos_km": [7, 18000],
     "cambio_liquido_refrigerante_km": [7, 27000],
-    # Sistema de Transmisión
+# Sistema de Transmisión
     "limpieza_lubricacion_cadena_km": [7, 500],
     "ajuste_tension_cadena_km": [7, 1200],
     "cambio_kit_arrastre_km": [7, 23000],
-    # Frenos
+# Frenos
     "cambio_pastillas_freno_km": [7, 9500],
     "revision_discos_freno_km": [7, 14000],
     "sangrado_liquido_frenos_km": [7, 19500],
-    # Sistema Eléctrico
+# Sistema Eléctrico
     "cambio_bujias_km": [7, 10200],
     "revision_bateria_km": [7, 5400],
     "revision_sistema_electrico_km": [7, 5600],
-    # Neumáticos y Suspensión
+# Neumáticos y Suspensión
     "revision_presion_neumaticos_km": [7, 1000],
     "cambio_neumaticos_km": [7, 15500],
     "revision_amortiguadores_km": [7, 20500],
-    # Motor y Partes Mecánicas
+# Motor y Partes Mecánicas
     "ajuste_valvulas_km": [7, 15800],
     "cambio_correa_distribucion_km": [7, 42000],
     "limpieza_carburador_km": [7, 10900],
-    # Revisiones Generales
+# Revisiones Generales
     "revision_general_km": [7, 5000],
 }
 
