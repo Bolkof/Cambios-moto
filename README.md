@@ -99,7 +99,7 @@ Ingrese el kilometraje actual de su vehículo (km):
 ```
 Ingrese el kilometraje que marca su vehículo por ejemplo 8888
 ```
-Ingrese el kilometraje actual de su moto (km): 8888
+Ingrese el kilometraje actual de su vehículo (km): 8888
 
 Próximos 15 mantenimientos (a partir de 8788 km):
 ------------------------------------------------------------
