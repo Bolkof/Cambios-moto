@@ -96,7 +96,7 @@ Ingrese el kilometraje actual de su moto (km):
 
 
 
-```
+```txt
 Ingrese el kilometraje que marca su vehículo por ejemplo 8888
 ```
 Ingrese el kilometraje actual de su moto (km): 8888
