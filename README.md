@@ -120,9 +120,6 @@ Próximos 15 mantenimientos (a partir de 8788 km):
 11200 km Revision Sistema Electrico     → (faltan 2412 km)
 ------------------------------------------------------------
 
-[Program finished]
+[Program finished] 
 ```
-para volver a consultar oprima el icono de flecha izquierda y vuelva a oprima el círculo amarillo
-## paso 5
-
-Si le gusto el programa guardelo en el dispositivo para futuras consultas retrocediendo con el icono de flecha izquierda, luego oprima icono de carpeta para que escojer la opción SAVE y guardelo en su dispositivo
+para volver a consultar oprima el icono de flecha izquierda y vuelver a oprima el círculo amarillo
