@@ -73,7 +73,7 @@ def proximos_mantenimientos(kilometraje_actual):
 
 # Ejemplo de uso
 try:
-    kilometraje_actual = int(input("Ingrese el kilometraje actual de su moto (km): "))
+    kilometraje_actual = int(input("Ingrese el kilometraje actual de su vehículo (km): "))
     kilometraje_actual -= 100
     proximos_mantenimientos(kilometraje_actual)
 except ValueError:
@@ -89,7 +89,7 @@ Ejecutar el archivo con el círculo amarillo
 El programa se verá algo así:
 
 ```
-Ingrese el kilometraje actual de su moto (km):
+Ingrese el kilometraje actual de su vehículo (km):
 
 
 
