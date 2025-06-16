@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificador de Mantenimiento de Moto</title>
+    <style>
+/* Base: estilos móviles */
+body {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    margin: 15px;
+    background-color: #0056b3;
+    color: #333;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    background-color: #f1fcef;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+h1, h2 {
+    color: #0056b3;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 0.95em;
+}
+
+.maintenance-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.maintenance-item {
+    background-color: #e9f5ff;
+    border: 1px solid #cce7ff;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.maintenance-item label {
+    font-size: 0.85em;
+    font-weight: normal;
+}
+
+.maintenance-item input {
+    width: 100%;
+    padding: 6px;
+    font-size: 0.9em;
+}
+
+.current-km-item {
+    grid-column: 1 / -1;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    padding: 12px;
+}
+
+.current-km-item input {
+    width: 100%;
+    font-size: 1em;
+    padding: 8px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.results-box {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-top: 25px;
+    border-radius: 8px;
+    min-height: 120px;
+    white-space: pre-wrap;
+    font-family: 'Roboto Mono', 'Source Code Pro', Menlo, monospace;
+    font-size: 0.85em;
+    line-height: 1.5;
+}
+
+.error-message {
+    color: #d9534f;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+/* Escalado para pantallas más grandes */
+@media (min-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    h1, h2 {
+        font-size: 1.8em;
+    }
+
+    .container {
+        max-width: 700px;
+        padding: 30px;
+    }
+
+    .maintenance-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    input[type="number"],
+    .maintenance-item input,
+    .current-km-item input {
+        font-size: 1em;
+    }
+
+    button {
+        font-size: 1.1em;
+    }
+
+    .results-box {
+        font-size: 1em;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 900px;
+    }
+
+    h1, h2 {
+        font-size: 2em;
+    }
+}
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Planificador de Mantenimiento de Moto o Automovil</h1>
+        <p>Ajusta los periodos de mantenimiento y consulta los próximos servicios según tu kilometraje actual.</p>
+
+        ---
+
+        <h2>Ajustar Periodos de Mantenimiento (en KM)</h2>
+        <div class="maintenance-grid" id="maintenanceInputs">
+            </div>
+
+        <button onclick="consultarMantenimientos()">Consultar</button>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <div class="results-box" id="resultsBox">
+            Ingresa tu kilometraje y haz clic en "Consultar" para ver los próximos mantenimientos.
+        </div>
+    </div>
+
+    <script>
+        // Objeto con los intervalos de mantenimiento iniciales
+        let mantenimientoMoto = {
+            // Cambios de Fluidos y Filtros
+            "cambio_aceite_motor_km": 3000,
+            "cambio_aceite_sintetico_km": 6000,
+            "cambio_filtro_aceite_km": 7000,
+            "cambio_filtro_aire_km": 8500,
+            "cambio_liquido_frenos_km": 18000,
+            "cambio_liquido_refrigerante_km": 27000,
+
+            // Sistema de Transmisión
+            "limpieza_lubricacion_cadena_km": 500,
+            "ajuste_tension_cadena_km": 1200,
+            "cambio_kit_arrastre_km": 23000,
+
+            // Frenos
+            "cambio_pastillas_freno_km": 9500,
+            "revision_discos_freno_km": 14000,
+            "sangrado_liquido_frenos_km": 19500,
+
+            // Sistema Eléctrico
+            "cambio_bujias_km": 10200,
+            "revision_bateria_km": 5400,
+            "revision_sistema_electrico_km": 5600,
+
+            // Neumáticos y Suspensión
+            "revision_presion_neumaticos_km": 1000,
+            "cambio_neumaticos_km": 15500,
+            "revision_amortiguadores_km": 20500,
+
+            // Motor y Partes Mecánicas
+            "ajuste_valvulas_km": 15800,
+            "cambio_correa_distribucion_km": 42000,
+            "limpieza_carburador_km": 10900,
+
+            // Revisiones Generales
+            "revision_general_km": 5000,
+        };
+
+        // Variable para almacenar el kilometraje actual ingresado
+        let currentKilometrageValue = 0;
+
+        // Función para generar dinámicamente los campos de entrada
+        function generateMaintenanceInputs() {
+            const container = document.getElementById("maintenanceInputs");
+            container.innerHTML = ''; // Limpiar cualquier contenido previo
+
+            // 1. Añadir el campo de kilometraje actual primero
+            const kmDiv = document.createElement("div");
+            kmDiv.className = "maintenance-item current-km-item";
+            kmDiv.innerHTML = `
+                <label for="currentKilometrage">Kilometraje Actual de tu Moto (km):</label>
+                <input type="number" id="currentKilometrage" placeholder="Ej: 12500" min="0" value="${currentKilometrageValue}">
+            `;
+            container.appendChild(kmDiv);
+
+            // 2. Añadir los demás campos de mantenimiento
+            for (const key in mantenimientoMoto) {
+                if (mantenimientoMoto.hasOwnProperty(key)) {
+                    const div = document.createElement("div");
+                    div.className = "maintenance-item";
+
+                    const labelText = key.replace(/_/g, " ").replace(" km", "").replace(/\b\w/g, char => char.toUpperCase());
+                    
+                    div.innerHTML = `
+                        <label for="${key}">${labelText}:</label>
+                        <input type="number" id="${key}" value="${mantenimientoMoto[key]}" min="100">
+                    `;
+                    container.appendChild(div);
+                }
+            }
+        }
+
+        // Llama a la función para generar los inputs al cargar la página
+        window.onload = generateMaintenanceInputs;
+
+        // Función principal para consultar los próximos mantenimientos
+        function consultarMantenimientos() {
+            const currentKilometrageInput = document.getElementById("currentKilometrage");
+            const resultsBox = document.getElementById("resultsBox");
+            const errorMessageDiv = document.getElementById("errorMessage");
+            errorMessageDiv.textContent = ""; // Limpiar mensajes de error previos
+
+            // 1. Obtener y validar el kilometraje actual
+            let kilometrajeIngresado = parseInt(currentKilometrageInput.value);
+            if (isNaN(kilometrajeIngresado) || kilometrajeIngresado < 0) {
+                errorMessageDiv.textContent = "Error: Por favor, ingrese un kilometraje actual válido (solo números positivos).";
+                resultsBox.textContent = "Ingresa tu kilometraje y haz clic en 'Consultar' para ver los próximos mantenimientos.";
+                return;
+            }
+            currentKilometrageValue = kilometrajeIngresado; // Guardar el valor válido
+
+            // 2. Actualizar los valores de `mantenimientoMoto` con lo ingresado en el formulario
+            for (const key in mantenimientoMoto) {
+                if (mantenimientoMoto.hasOwnProperty(key)) {
+                    const inputElement = document.getElementById(key);
+                    if (inputElement && inputElement.value !== "") {
+                        const newValue = parseInt(inputElement.value);
+                        if (!isNaN(newValue) && newValue > 0) {
+                            mantenimientoMoto[key] = newValue;
+                        } else {
+                            errorMessageDiv.textContent = `Error: El periodo para "${inputElement.previousElementSibling.textContent.replace(':', '')}" debe ser mayor a uno o estar la  casila vacia`;
+                            return; // Salir de la función si hay un error
+                        }
+                    }
+                }
+            }
+
+            // Llamar a la función que calcula los mantenimientos
+            const proximosMantenimientosList = calcularProximosMantenimientos(currentKilometrageValue);
+
+            // Formatear y mostrar los resultados
+            if (proximosMantenimientosList.length > 0) {
+                // Notar que en tu código Python, aunque se toma [:20], el mensaje dice "Próximos 15".
+                // He mantenido el mensaje "Próximos 15" para replicar exactamente la salida de tu Python.
+                let output = `Próximos 15 mantenimientos (a partir de ${currentKilometrageValue} km) seran:\n`;
+                output += "-".repeat(60) + "\n";
+                proximosMantenimientosList.forEach(([nombre, km]) => {
+                    const nombreFormateado = nombre.replace(/_/g, " ").replace(" km", "").replace(/\b\w/g, char => char.toUpperCase());
+                    const faltan = km - currentKilometrageValue;
+                    output += `${String(km).padEnd(6)} km ${nombreFormateado.padEnd(30)} → (faltan ${faltan} km)\n\n`; // Doble \n para replicar el salto de línea extra
+                });
+                output += "-".repeat(60);
+                resultsBox.textContent = output;
+            } else {
+                resultsBox.textContent = "No se encontraron mantenimientos próximos. Verifica los valores ingresados.";
+            }
+        }
+
+        // Función equivalente a `proximos_mantenimientos` de Python
+        function calcularProximosMantenimientos(kilometrajeActual) {
+            let mantenimientosProximos = [];
+
+            // Disminuimos el kilometraje en 100 km para que el primer cálculo incluya el mantenimiento actual si corresponde.
+            // Esto replica el comportamiento de `kilometraje_actual -= 100` de tu código Python.
+            kilometrajeActual = Math.max(0, kilometrajeActual - 100);
+
+            for (const nombre in mantenimientoMoto) {
+                if (mantenimientoMoto.hasOwnProperty(nombre)) {
+                    const intervalo_km = mantenimientoMoto[nombre];
+                    let proximo_km;
+
+                    if (kilometrajeActual < intervalo_km) {
+                        proximo_km = intervalo_km;
+                    } else {
+                        proximo_km = (Math.floor(kilometrajeActual / intervalo_km) + 1) * intervalo_km;
+                    }
+
+                    for (let repeticion = 0; repeticion < 3; repeticion++) { // Próximas 3 ocurrencias
+                        const km = proximo_km + (repeticion * intervalo_km);
+                        mantenimientosProximos.push([nombre, km]);
+                    }
+                }
+            }
+
+            // Eliminar duplicados y ordenar por kilometraje
+            const uniqueMantenimientos = Array.from(new Set(mantenimientosProximos.map(JSON.stringify)), JSON.parse);
+            uniqueMantenimientos.sort((a, b) => a[1] - b[1]);
+
+            // Tomar los 20 más cercanos, como en tu código Python
+            return uniqueMantenimientos.slice(0, 20);
+        }
+    </script>
+</body>
+</html>
